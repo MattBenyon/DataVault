@@ -1,0 +1,322 @@
+CREATE TYPE TypeAllocation AS ENUM ('within-subject','between-subject');
+
+CREATE TYPE TypeSession AS ENUM ('cross-sectional','longitudinal');
+
+
+CREATE TABLE "ExperimentHUB" (
+  "ExperimentID" SERIAL NOT NULL,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ExperimentID")
+);
+
+CREATE TABLE "ResearcherHUB" (
+  "ResearcherID" SERIAL NOT NULL,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ResearcherID")
+);
+
+CREATE TABLE "ResearcherName" (
+  "ResearcherID" int,
+  "Forename" varchar(30),
+  "Surname" varchar(30),
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ResearcherID"),
+  CONSTRAINT "FK_ResearcherName.ResearcherID"
+    FOREIGN KEY ("ResearcherID")
+      REFERENCES "ResearcherHUB"("ResearcherID")
+);
+
+CREATE TABLE "ExperimentTitle" (
+  "ExperimentID" int,
+  "Ttile" varchar(100),
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ExperimentID"),
+  CONSTRAINT "FK_ExperimentTitle.ExperimentID"
+    FOREIGN KEY ("ExperimentID")
+      REFERENCES "ExperimentHUB"("ExperimentID")
+);
+
+CREATE TABLE "ExperimentRQ" (
+  "ExperimentID" int,
+  "ResearchQuestion" varchar(100),
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ExperimentID"),
+  CONSTRAINT "FK_ExperimentRQ.ExperimentID"
+    FOREIGN KEY ("ExperimentID")
+      REFERENCES "ExperimentHUB"("ExperimentID")
+);
+
+CREATE TABLE "ExperimentHypothesis" (
+  "ExperimentID" int,
+  "Hypothesis" varchar(200),
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ExperimentID"),
+  CONSTRAINT "FK_ExperimentHypothesis.ExperimentID"
+    FOREIGN KEY ("ExperimentID")
+      REFERENCES "ExperimentHUB"("ExperimentID")
+);
+
+CREATE TABLE "ExperimentGoal" (
+  "ExperimentID" int,
+  "Goal" varchar(100),
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ExperimentID"),
+  CONSTRAINT "FK_ExperimentGoal.ExperimentID"
+    FOREIGN KEY ("ExperimentID")
+      REFERENCES "ExperimentHUB"("ExperimentID")
+);
+
+CREATE TABLE "ExperimentAllocation" (
+  "ExperimentID" int,
+  "TypeByAllocation" TypeAllocation,
+  "Source" varchar(30),
+  "Tiemstamp" timestamp,
+  PRIMARY KEY ("ExperimentID"),
+  CONSTRAINT "FK_ExperimentAllocation.ExperimentID"
+    FOREIGN KEY ("ExperimentID")
+      REFERENCES "ExperimentHUB"("ExperimentID")
+);
+
+CREATE TABLE "ExperimentNoSessions" (
+  "ExperimentID" int,
+  "TypeByNoSession" TypeSession,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ExperimentID"),
+  CONSTRAINT "FK_ExperimentNoSessions.ExperimentID"
+    FOREIGN KEY ("ExperimentID")
+      REFERENCES "ExperimentHUB"("ExperimentID")
+);
+
+CREATE TABLE "ConductsLINK" (
+  "ExpResearcherLINKID" SERIAL NOT NULL,
+  "ExperimentID" int NOT NULL,
+  "ResearcherID" int NOT NULL,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ExpResearcherLINKID"),
+  CONSTRAINT "FK_ConductsLINK.ResearcherID"
+    FOREIGN KEY ("ResearcherID")
+      REFERENCES "ResearcherHUB"("ResearcherID"),
+  CONSTRAINT "FK_ConductsLINK.ExperimentID"
+    FOREIGN KEY ("ExperimentID")
+      REFERENCES "ExperimentHUB"("ExperimentID")
+);
+
+CREATE TABLE "SimpleFactorHUB" (
+  "SimpleFactorID" SERIAL NOT NULL,
+  "Level" int,
+  "Description" varchar(30),
+  "Source" varchar(30),
+  "Timestamp" time,
+  PRIMARY KEY ("SimpleFactorID")
+);
+
+CREATE TABLE "CoFactorHUB" (
+  "CoFactorID" SERIAL NOT NULL,
+  "Level" int,
+  "Description" varchar(30),
+  "Source" varchar(30),
+  "Timestamp" time,
+  PRIMARY KEY ("CoFactorID")
+);
+
+CREATE TABLE "ConfoundingFactorHUB" (
+  "ConfoundingFactorID" SERIAL NOT NULL,
+  "Level" int,
+  "Description" varchar(30),
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ConfoundingFactorID")
+);
+
+CREATE TABLE "ExpSimpleFactorLINK" (
+  "ExpSimpleFactorLINKID" SERIAL NOT NULL,
+  "ExperimentID" int NOT NULL,
+  "SimpleFactorID" int NOT NULL UNIQUE,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ExpSimpleFactorLINKID"),
+  CONSTRAINT "FK_ExpSimpleFactorLINK.SimpleFactorID"
+    FOREIGN KEY ("SimpleFactorID")
+      REFERENCES "SimpleFactorHUB"("SimpleFactorID"),
+  CONSTRAINT "FK_ExpSimpleFactorLINK.ExperimentID"
+    FOREIGN KEY ("ExperimentID")
+      REFERENCES "ExperimentHUB"("ExperimentID")
+);
+
+CREATE TABLE "ExpCoFactorLINK" (
+  "ExpCoFactorLINKID" SERIAL NOT NULL,
+  "ExperimentID" int NOT NULL,
+  "CoFactorID" int NOT NULL UNIQUE,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ExpCoFactorLINKID"),
+  CONSTRAINT "FK_ExpCoFactorLINK.CoFactorID"
+    FOREIGN KEY ("CoFactorID")
+      REFERENCES "CoFactorHUB"("CoFactorID"),
+  CONSTRAINT "FK_ExpCoFactorLINK.ExperimentID"
+    FOREIGN KEY ("ExperimentID")
+      REFERENCES "ExperimentHUB"("ExperimentID")
+);
+
+CREATE TABLE "ExpConfoundingFactorLINK" (
+  "ExpConfoundingFactorLINKID" SERIAL NOT NULL,
+  "ExperimentID" int NOT NULL,
+  "ConfoundingFactorID" int NOT NULL UNIQUE,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ExpConfoundingFactorLINKID"),
+  CONSTRAINT "FK_ExpConfoundingFactorLINK.ConfoundingFactorID"
+    FOREIGN KEY ("ConfoundingFactorID")
+      REFERENCES "ConfoundingFactorHUB"("ConfoundingFactorID"),
+  CONSTRAINT "FK_ExpConfoundingFactorLINK.ExperimentID"
+    FOREIGN KEY ("ExperimentID")
+      REFERENCES "ExperimentHUB"("ExperimentID")
+);
+
+CREATE TABLE "LevelHUB" (
+  "LevelID" SERIAL NOT NULL,
+  "Value" float,
+  "Source" varchar(30),
+  "Timestamp" time,
+  PRIMARY KEY ("LevelID")
+);
+
+CREATE TABLE "TreatmentLINK" (
+  "TreatmentID" SERIAL NOT NULL,
+  "SimpleFactorID" int NOT NULL,
+  "LevelID" int NOT NULL,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("TreatmentID"),
+  CONSTRAINT "FK_TreatmentLINK.SimpleFactorID"
+    FOREIGN KEY ("SimpleFactorID")
+      REFERENCES "SimpleFactorHUB"("SimpleFactorID"),
+  CONSTRAINT "FK_TreatmentLINK.LevelID"
+    FOREIGN KEY ("LevelID")
+      REFERENCES "LevelHUB"("LevelID")
+);
+
+CREATE TABLE "SessionHUB" (
+  "SessionID" SERIAL NOT NULL,
+  "Acquistiontimestamp" timestamp,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("SessionID")
+);
+
+CREATE TABLE "TreatmentHUB" (
+  "TreatmentID" int NOT NULL,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("TreatmentID")
+);
+
+CREATE TABLE "AdministersLINK" (
+  "AdministerID" SERIAL NOT NULL,
+  "TreatmentID" int NOT NULL,
+  "SessionID" int NOT NULL,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("AdministerID"),
+  CONSTRAINT "FK_AdministersLINK.TreatmentID"
+    FOREIGN KEY ("TreatmentID")
+      REFERENCES "TreatmentHUB"("TreatmentID"),
+  CONSTRAINT "FK_AdministersLINK.SessionID"
+    FOREIGN KEY ("SessionID")
+      REFERENCES "SessionHUB"("SessionID")
+);
+
+CREATE TABLE "HasTreatmentsLINK" (
+  "ExpTreatmentID" SERIAL NOT NULL,
+  "TreatmentID" int NOT NULL UNIQUE,
+  "ExperimentID" int NOT NULL,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ExpTreatmentID", "Source"),
+  CONSTRAINT "FK_HasTreatmentsLINK.TreatmentID"
+    FOREIGN KEY ("TreatmentID")
+      REFERENCES "TreatmentHUB"("TreatmentID"),
+  CONSTRAINT "FK_HasTreatmentsLINK.ExperimentID"
+    FOREIGN KEY ("ExperimentID")
+      REFERENCES "ExperimentHUB"("ExperimentID")
+);
+
+CREATE TABLE "EndpointHUB" (
+  "EndpointID" SERIAL NOT NULL,
+  "Name" varchar(30),
+  "ObservedValue" float,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("EndpointID")
+);
+
+CREATE TABLE "GroupHUB" (
+  "GroupID" SERIAL NOT NULL,
+  "AllocationMethod" TypeAllocation,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("GroupID")
+);
+
+CREATE TABLE "ObservesLINK" (
+  "ObservesID" SERIAL NOT NULL,
+  "EndpointID" int UNIQUE NOT NULL,
+  "ExperimentID" int NOT NULL,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ObservesID"),
+  CONSTRAINT "FK_ObservesLINK.EndpointID"
+    FOREIGN KEY ("EndpointID")
+      REFERENCES "EndpointHUB"("EndpointID"),
+  CONSTRAINT "FK_ObservesLINK.ExperimentID"
+    FOREIGN KEY ("ExperimentID")
+      REFERENCES "ExperimentHUB"("ExperimentID")
+);
+
+CREATE TABLE "ExperimentalUnitHUB" (
+  "ExperimentalUnitIID" SERIAL NOT NULL,
+  "Description" varchar(100),
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("ExperimentalUnitIID")
+);
+
+CREATE TABLE "GroupsLINK" (
+  "GroupsID" SERIAL NOT NULL,
+  "GroupID" int NOT NULL,
+  "ExperimentalUnitID" int NOT NULL UNIQUE,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("GroupsID"),
+  CONSTRAINT "FK_GroupsLINK.GroupID"
+    FOREIGN KEY ("GroupID")
+      REFERENCES "GroupHUB"("GroupID"),
+  CONSTRAINT "FK_GroupsLINK.ExperimentalUnitID"
+    FOREIGN KEY ("ExperimentalUnitID")
+      REFERENCES "ExperimentalUnitHUB"("ExperimentalUnitIID")
+);
+
+CREATE TABLE "MeasuresLINK" (
+  "MeasuresID" SERIAL NOT NULL,
+  "SessionID" int NOT NULL,
+  "ExperimentalUnitID" int NOT NULL UNIQUE,
+  "Source" varchar(30),
+  "Timestamp" timestamp,
+  PRIMARY KEY ("MeasuresID"),
+  CONSTRAINT "FK_MeasuresLINK.ExperimentalUnitID"
+    FOREIGN KEY ("ExperimentalUnitID")
+      REFERENCES "ExperimentalUnitHUB"("ExperimentalUnitIID"),
+  CONSTRAINT "FK_MeasuresLINK.SessionID"
+    FOREIGN KEY ("SessionID")
+      REFERENCES "SessionHUB"("SessionID")
+);
+
