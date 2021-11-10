@@ -1,13 +1,13 @@
 # DataVault
+Version from 10/11/2021 @ 13:50
 
-### Version from 10/11/2021 @ 13:50
-## *** Instructions for getting the project to run on your machines ***
+##  Instructions for getting the project to run on your machines 
 
 1. Open PostgreSQL shell, create a user called g09 with password g09, grant user permissions
 
 2. Create a database called v4_test
 
-3. make sure that your directory looks the same as this
+3. Download python scripts to your project file. Your directory needs to look like the below:
 
 ![Screenshot](https://raw.githubusercontent.com/MattBenyon/DataVault/main/Screenshot%202021-11-04%20112951.png)
 
