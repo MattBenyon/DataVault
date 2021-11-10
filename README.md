@@ -1,7 +1,7 @@
 # DataVault
 
 ### Version from 10/11/2021 @ 13:50
-##*** Instructions for getting the project to run on your machines ***
+## *** Instructions for getting the project to run on your machines ***
 
 1. Open PostgreSQL shell, create a user called g09 with password g09, grant user permissions
 
