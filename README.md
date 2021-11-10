@@ -1,12 +1,31 @@
 # DataVault
 
-### Version from 4/11/21 at 11:30am
-Add the python files to your project file to look like the image below
+### Version from 10/11/2021 @ 13:50
+##*** Instructions for getting the project to run on your machines ***
 
-Thinking about removing adminstersLINK, sessionHUB, and measuresLINK and just haveing sessionLINK with an ID for each session - maybe keep session hub off of it with a description of sorts
+1. Open PostgreSQL shell, create a user called g09 with password g09, grant user permissions
 
-List of tables that still need to be populated: EndpointUnitLINK, DataSourceLINK, DataTypeLINK, (AdministersLINK, MeasuresLINK, SessionHUB / what we decide to keep change) + experimetnal goal and hypothesis (honestly thugh these can be empty)
+2. Create a database called v4_test
 
-ALSO, I decided to input the observed value as a string seperated by commas because I couldn't get the python array to insert into the postgre array, but I will try get that sorted in the future
+3. make sure that your directory looks the same as this
 
 ![Screenshot](https://raw.githubusercontent.com/MattBenyon/DataVault/main/Screenshot%202021-11-04%20112951.png)
+
+4. Make sure that you have pip'd to your environment the following:
+
+	- easygui
+	- psycopg2
+	- pandas
+	- numpy
+	- plotly
+	- hashlib
+
+
+4. Run main.py by either entering details into gui or by commenting out gui section and uncommenting variables
+	below it
+
+5. Let it run, it will take approx. 15 minutes sorry
+
+6. Once that has completed, you can run GeneratePlot_D1.py and you should be able to generate plots for a specific
+   patient, the treatment (eg Visual stimulus, motor stimulus) and the type of data (eg oxy, deoxy)
+
