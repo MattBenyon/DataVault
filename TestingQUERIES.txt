@@ -1,0 +1,14 @@
+
+SELECT ObservedValue FROM EndpointHUB
+INNER JOIN Treatments ON EndpointHUB.EndpointID = Treatments.EndpointID
+INNER JOIN TreatmentHUB ON Treatments.TreatmentID = TreatmentHUB.TreatmentID
+INNER JOIN EndpointUnitLink ON EndpointHUB.EndpointID = EndpointUnitLINK.EndpointID
+INNER JOIN DataTypeLINK ON EndpointHUB.EndpointID = DataTypeLINK.EndpointID
+WHERE EndpointUnitLINK.ExperimentalUnitID = 1 AND DataTypeID = 1 AND TreatmentHUB.TreatmentID = 5;
+
+
+
+
+
+
+

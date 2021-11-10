@@ -1,0 +1,216 @@
+/* DataVault script Version 4.0 */
+
+CREATE TYPE TypeAllocation AS ENUM ('within-subject','between-subject');
+
+CREATE TYPE TypeSession AS ENUM ('cross-sectional','longitudinal');
+
+
+CREATE TABLE ExperimentalUnitHUB (
+  ExperimentalUnitID SERIAL NOT NULL UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  Description varchar(100),
+  PRIMARY KEY (ExperimentalUnitID, Source, Timestamp)
+);
+
+
+
+CREATE TABLE TreatmentHUB (
+  TreatmentID SERIAL NOT NULL UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  Metadata varchar,
+  TreatmentDescription varchar(100),
+  PRIMARY KEY (TreatmentID, Source, Timestamp)
+);
+
+CREATE TABLE ExperimentHUB (
+  ExperimentID SERIAL NOT NULL UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  Title varchar(100),
+  ResearchQuestion varchar(100),
+  PRIMARY KEY (ExperimentID, Source, Timestamp)
+);
+
+
+CREATE TABLE EndpointHUB (
+  EndpointID SERIAL NOT NULL UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  Name varchar(30),
+  ObservedValue varchar ARRAY,
+  PRIMARY KEY (EndpointID, Source, Timestamp)
+);
+
+CREATE TABLE EndpointUnitLINK (
+  EndpointUnitID SERIAL NOT NULL UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  ExperimentalUnitID int NOT NULL,
+  EndpointID int NOT NULL UNIQUE,
+  PRIMARY KEY (EndpointUnitID, Source, Timestamp),
+    FOREIGN KEY (ExperimentalUnitID)
+      REFERENCES ExperimentalUnitHUB(ExperimentalUnitID),
+    FOREIGN KEY (EndpointID)
+      REFERENCES EndpointHUB(EndpointID)
+);
+
+CREATE TABLE ResearcherHUB (
+  ResearcherID SERIAL NOT NULL UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  Forename varchar(30),
+  Surname varchar(30),
+  PRIMARY KEY (ResearcherID, Source, Timestamp)
+);
+
+CREATE TABLE Conducts (
+  ExpResearcherLINKID SERIAL NOT NULL UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  ExperimentID int NOT NULL UNIQUE,
+  ResearcherID int NOT NULL UNIQUE,
+  PRIMARY KEY (ExpResearcherLINKID, Source, Timestamp),
+    FOREIGN KEY (ExperimentID)
+      REFERENCES ExperimentHUB(ExperimentID),
+    FOREIGN KEY (ResearcherID)
+      REFERENCES ResearcherHUB(ResearcherID)
+);
+
+CREATE TABLE SessionHUB (
+  SessionID SERIAL NOT NULL UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  Acquisitiontimestamp varchar,
+  PRIMARY KEY (SessionID, Source, Timestamp)
+);
+
+
+
+CREATE TABLE MeasuresLINK (
+  MeasuresID SERIAL NOT NULL UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  ExperimentalUnitID int NOT NULL,
+  SessionID int NOT NULL,
+  PRIMARY KEY (MeasuresID, Source, Timestamp),
+    FOREIGN KEY (SessionID)
+      REFERENCES SessionHUB(SessionID),
+    FOREIGN KEY (ExperimentalUnitID)
+      REFERENCES ExperimentalUnitHUB(ExperimentalUnitID)
+);
+
+
+CREATE TABLE ExperimentNoSessions (
+  ExperimentID int UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  TypeByNoSession TypeSession,
+  PRIMARY KEY (ExperimentID, Source, Timestamp),
+	FOREIGN KEY (ExperimentID)
+      REFERENCES ExperimentHUB(ExperimentID));
+
+CREATE TABLE ObservesLINK (
+  ObservesID SERIAL NOT NULL UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  ExperimentID int NOT NULL,
+  EndpointID int UNIQUE NOT NULL UNIQUE,
+  PRIMARY KEY (ObservesID, Source, Timestamp),
+  FOREIGN KEY (ExperimentID) REFERENCES ExperimentHUB(ExperimentID),
+  FOREIGN KEY (EndpointID) REFERENCES EndpointHUB(EndpointID));
+
+CREATE TABLE ExperimentGoal (
+  ExperimentID int UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  Goal varchar(100),
+  PRIMARY KEY (ExperimentID, Source, Timestamp),
+	FOREIGN KEY (ExperimentID)
+      REFERENCES ExperimentHUB(ExperimentID)
+);
+
+CREATE TABLE ExperimentAllocation (
+  ExperimentID int UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  TypeByAllocation TypeAllocation,
+  PRIMARY KEY (ExperimentID, Source, Timestamp),
+ 	FOREIGN KEY (ExperimentID)
+      REFERENCES ExperimentHUB(ExperimentID)
+);
+
+CREATE TABLE ExperimentHypothesis (
+  ExperimentID int UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  Hypothesis varchar(200),
+  PRIMARY KEY (ExperimentID, Source, Timestamp),
+	FOREIGN KEY (ExperimentID)
+      REFERENCES ExperimentHUB(ExperimentID)	
+);
+
+CREATE TABLE Affiliation (
+  ResearcherID int UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  Affiliation varchar(200),
+  PRIMARY KEY (ResearcherID, Source, Timestamp),
+    FOREIGN KEY (ResearcherID)
+      REFERENCES ResearcherHUB(ResearcherID)
+);
+
+CREATE TABLE DataSource (
+  DataSourceID SERIAL NOT NULL UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  Name varchar(30),
+  Description varchar(30),
+  PRIMARY KEY (DataSourceID, Source, Timestamp)
+);
+
+CREATE TABLE DataSourceLINK (
+  DataSourceLinkID SERIAL NOT NULL UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  EndpointID int NOT NULL UNIQUE,
+  DataSourceID int NOT NULL,
+  PRIMARY KEY (DataSourceID, Source, Timestamp),
+    FOREIGN KEY (DataSourceID)
+      REFERENCES DataSource(DataSourceID)
+);
+
+CREATE TABLE DataType (
+  DataTypeID SERIAL NOT NULL UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  Name varchar(30),
+  Description varchar(30),
+  PRIMARY KEY (DataTypeID, Source, Timestamp)
+);
+
+CREATE TABLE DataTypeLINK (
+  DataTypeLinkID SERIAL NOT NULL UNIQUE,
+  Source varchar,
+  Timestamp timestamp,
+  EndpointID int NOT NULL UNIQUE,
+  DataTypeID int NOT NULL,
+  PRIMARY KEY (DataTypeID, Source, Timestamp),
+    FOREIGN KEY (DataTypeID)
+      REFERENCES DataType(DataTypeID),
+    FOREIGN KEY (EndpointID)
+      REFERENCES EndpointHUB(EndpointID)
+);
+
+CREATE TABLE Treatments (
+  AdministerID SERIAL NOT NULL,
+  Source varchar,
+  Timestamp timestamp,
+  TreatmentID int NOT NULL,
+  EndpointID int UNIQUE NOT NULL,
+  PRIMARY KEY (AdministerID),
+  FOREIGN KEY (EndpointID) REFERENCES EndpointHUB(EndpointID),
+  FOREIGN KEY (TreatmentID) REFERENCES TreatmentHUB(TreatmentID)
+);
+
