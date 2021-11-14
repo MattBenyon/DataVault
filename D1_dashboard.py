@@ -10,7 +10,6 @@ import GeneratePlot_D1
 app = Dash(__name__)
 
 
-# App layout
 app.layout = html.Div([
 
     html.H1("G09 Neuro Imaging Data Vault - Analytics Dash", style={'text-align': 'center'}),
@@ -70,9 +69,6 @@ app.layout = html.Div([
 
 
 
-
-# ------------------------------------------------------------------------------
-# Connect the Plotly graphs with Dash Components
 @app.callback(
     Output(component_id='timeseries', component_property='figure'),
     [Input(component_id='experimentalunitID', component_property='value'),
@@ -143,6 +139,5 @@ def func(n_clicks, experimentalunitID, datatypeID, treatmentChoice):
 
 
 
-# ------------------------------------------------------------------------------
 if __name__ == '__main__':
     app.run_server(debug=True)
