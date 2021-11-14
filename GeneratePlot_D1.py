@@ -4,6 +4,24 @@ import pandas as pd
 import plotly.express as px
 import numpy as np
 
+def getTreatment(treatmentID):
+    conn = connect(
+        dbname='v4_test',
+        user='g09',
+        host="localhost",
+        password='g09')
+
+    cursor = conn.cursor()
+    select = ''' 
+            SELECT MetaData FROM TreatmentHUB WHERE TreatmentID = %s 
+            '''
+
+    cursor.execute(select, [treatmentID])
+    result = cursor.fetchall()
+    conn.close()
+
+    return result
+
 
 def QueryAllUnits(datatypeID, treatmentID):
     conn = connect(
