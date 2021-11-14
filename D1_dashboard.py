@@ -1,5 +1,5 @@
 
-from dash import Dash, dcc, html, Input, Output
+from dash import Dash, dcc, html, Input, Output, callback_context
 
 import numpy as np
 
@@ -58,8 +58,8 @@ app.layout = html.Div([
                  style={'width': "60%"}
                  ),
 
-    html.Button("Download Metadata JSON file", id="btn-download-txt", style={'width': "36%"}),
-    dcc.Download(id="download-text"),
+    html.Button("Download Metadata JSON file", id="btn-download", style={'width': "36%"}, n_clicks = 0),
+    dcc.Download(id="download"),
 
     html.Div(id='output_container', children=[]),
     html.Br(),
@@ -108,18 +108,19 @@ def update_graph(experimentalunitID, datatypeID, treatmentChoice):
 
 
 @app.callback(
-    Output("download-text", "data"),
-    [Input("btn-download-txt", "n_clicks"), Input(component_id='experimentalunitID', component_property='value'),
+    Output("download", "data"),
+    [Input("btn-download", "n_clicks"), Input(component_id='experimentalunitID', component_property='value'),
      Input(component_id='datatypeID', component_property='value'),
      Input(component_id='treatmentChoice', component_property='value')],
     prevent_initial_call=True,)
 
 def func(n_clicks, experimentalunitID, datatypeID, treatmentChoice):
-    print(n_clicks)
-    if n_clicks == 1:
+
+    changed_id = [p['prop_id'] for p in callback_context.triggered][0]
+
+    if 'btn-download' in changed_id:
         if experimentalunitID == 11:
             nothing = dict(content="There is no metadata for the average", filename="average.txt")
-
             return nothing
 
         else:
@@ -129,7 +130,9 @@ def func(n_clicks, experimentalunitID, datatypeID, treatmentChoice):
             content = GeneratePlot_D1.getTreatment(treatmentChoice)
             content = json.dumps(content[0], indent = 4)
             return dict(content=content, filename=filename)
-    n_clicks = 0
+
+
+
 
 
 
