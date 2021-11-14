@@ -126,8 +126,15 @@ def func(n_clicks, experimentalunitID, datatypeID, treatmentChoice):
         else:
             DT =["Deoxy","Oxy","Total","MES"]
             T = ["Moto", "Rest", "ViMo", "ViSo"]
+
+            treatmentid_s = np.arange(1, 17)
+            treatmentid_s = treatmentid_s + (16 * (experimentalunitID - 1))
+            specific_treatment = ((treatmentChoice - 1) * 4) + datatypeID
+            TreatmentID = int(treatmentid_s[specific_treatment - 1])
+
+
             filename = "VM" + str(experimentalunitID) + "_" + DT[datatypeID] + "_" + T[treatmentChoice] + ".json"
-            content = GeneratePlot_D1.getTreatment(treatmentChoice)
+            content = GeneratePlot_D1.getTreatment(TreatmentID)
             content = json.dumps(content[0], indent = 4)
             return dict(content=content, filename=filename)
 
