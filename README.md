@@ -25,6 +25,7 @@ Version from 10/11/2021 @ 13:50
 
 5. Let it run, it will take approx. 15 minutes, sorry.
 
-6. Once that has completed, you can run GeneratePlot_D1.py and you should be able to generate plots for a specific
-   patient, the treatment (eg Visual stimulus, motor stimulus) and the type of data (eg oxy, deoxy).
+6. Run D1_dashboard
+
+
 
