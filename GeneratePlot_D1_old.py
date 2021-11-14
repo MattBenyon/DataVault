@@ -70,7 +70,7 @@ def QueryUnit(experimentalunitID, datatypeID, treatmentID):
         rows.append(row)
 
     data = pd.DataFrame(rows)
-    #print(data.head())
+    print(data.head())
     data = data.dropna(axis='columns') # sometimes it adds in extra columns full of NaNs, this is a workaround
 
 
@@ -120,6 +120,8 @@ def TimeSeries(data):
                      yaxis_title='Signal Strength',
                       legend_title_text='Channel')
 
+    fig.show()
+
     return fig
 
 def TimeSeriesAverage(data):
@@ -143,26 +145,71 @@ def TimeSeriesAverage(data):
                    }
 
     fig = px.line(data)
-
-    #if len(data.columns) == 24:
-     #   fig.for_each_trace(lambda t: t.update(name=variables_24[t.name],
-     #                                     legendgroup=variables_24[t.name],
-     ##                                     hovertemplate=t.hovertemplate.replace(t.name, variables_24[t.name])
-      #                                    ))
-    #elif len(data.columns) == 48:
-    #    fig.for_each_trace(lambda t: t.update(name=variables_48[t.name],
-    #                                          legendgroup=variables_48[t.name],
-    #                                          hovertemplate=t.hovertemplate.replace(t.name, variables_48[t.name])
-     #                                         ))
-
+    '''
+    if len(data.columns) == 24:
+        fig.for_each_trace(lambda t: t.update(name=variables_24[t.name],
+                                          legendgroup=variables_24[t.name],
+                                          hovertemplate=t.hovertemplate.replace(t.name, variables_24[t.name])
+                                          ))
+    elif len(data.columns) == 48:
+        fig.for_each_trace(lambda t: t.update(name=variables_48[t.name],
+                                              legendgroup=variables_48[t.name],
+                                              hovertemplate=t.hovertemplate.replace(t.name, variables_48[t.name])
+                                              ))
+    '''
 
     fig.update_layout(xaxis_title='Samples in time',
                      yaxis_title='Signal Strength',
                       legend_title_text='Channel')
 
+    fig.show()
 
     return fig
 
+def main():
+    continue_program = ''
+    while True:
+        if continue_program == 'q':
+            print("\nQuiting...")
+            break
+        else:
+            experimentid = int(input("\nEnter the ExperimentID: "))
+            print("Enter 'average' to get the average across all samples")
+            experimentalunitID = input("Enter the ExperimentalUnitID: ")
+            if experimentalunitID != 'average':
+                experimentalunitID = int(experimentalunitID)
+
+            print("1: Moto, 2: Rest, 3: ViMo, 4: ViSo")
+            treatmentChoice = int(input("Enter the treatment choice: "))
+
+            print("1: deoxy, 2: oxy, 3: total, 4: MES")
+            datatypeID = int(input("Enter the data type choice: "))
+
+            treatmentid_s = np.arange(1,17)
+
+            if experimentalunitID == 'average':
+                experimentalunitID = np.arange(0, 10)
+                treatmentid_s = (16 * (experimentalunitID)) + 1
+                specific_treatment = ((treatmentChoice - 1) * 4) + datatypeID
+                treatmentid_s = treatmentid_s + (specific_treatment - 1)
+                TreatmentID = treatmentid_s
+                data = QueryAllUnits(datatypeID, TreatmentID)
+                TimeSeriesAverage(data)
+            elif treatmentChoice in [1,2,3,4] and datatypeID in [1,2,3,4]:
+                treatmentid_s = treatmentid_s + (16 * (experimentalunitID - 1))
+                specific_treatment = ((treatmentChoice - 1) * 4) + datatypeID
+                TreatmentID = int(treatmentid_s[specific_treatment-1])
+                data = QueryUnit(experimentalunitID, datatypeID, TreatmentID)
+                TimeSeries(data)
+            else:
+                print("\nThere was an issue with your request.\n")
+                if treatmentChoice not in [1,2,3,4]:
+                    print("Please choose a treatment 1, 2, 3 or 4")
+                if datatypeID not in [1,2,3,4]:
+                    print("Please choose a data type 1, 2, 3 or 4")
+            continue_program = input("\nPlease press enter to continue (enter q to quit): ")
+
+main()
 
 
 
