@@ -3,6 +3,8 @@ from dash import Dash, dcc, html, Input, Output
 
 import numpy as np
 
+import json
+
 import GeneratePlot_D1
 
 app = Dash(__name__)
@@ -28,11 +30,11 @@ app.layout = html.Div([
                      {"label": "Experimental Unit 10", "value": 10}
                  ],
                  multi=False,
-                 value=11,
+                 value= 11,
                  style={'width': "60%"}
                  ),
 
-dcc.Dropdown(id="datatypeID",
+    dcc.Dropdown(id="datatypeID",
                  options=[
                      {"label": "Deoxy", "value": 1},
                      {"label": "Oxy", "value": 2},
@@ -40,11 +42,11 @@ dcc.Dropdown(id="datatypeID",
                      {"label": "MES", "value": 4},
                  ],
                  multi=False,
-                 value=1,
+                 value= 1,
                  style={'width': "60%"}
                  ),
 
-dcc.Dropdown(id="treatmentChoice",
+    dcc.Dropdown(id="treatmentChoice",
                  options=[
                      {"label": "Moto", "value": 1},
                      {"label": "Rest", "value": 2},
@@ -52,9 +54,12 @@ dcc.Dropdown(id="treatmentChoice",
                      {"label": "ViSo", "value": 4},
                  ],
                  multi=False,
-                 value=1,
+                 value= 1,
                  style={'width': "60%"}
                  ),
+
+    html.Button("Download Metadata JSON file", id="btn-download-txt", style={'width': "36%"}),
+    dcc.Download(id="download-text"),
 
     html.Div(id='output_container', children=[]),
     html.Br(),
@@ -65,11 +70,11 @@ dcc.Dropdown(id="treatmentChoice",
 
 
 
+
 # ------------------------------------------------------------------------------
 # Connect the Plotly graphs with Dash Components
 @app.callback(
-    [Output(component_id='output_container', component_property='children'),
-     Output(component_id='timeseries', component_property='figure')],
+    Output(component_id='timeseries', component_property='figure'),
     [Input(component_id='experimentalunitID', component_property='value'),
      Input(component_id='datatypeID', component_property='value'),
      Input(component_id='treatmentChoice', component_property='value')]
@@ -89,18 +94,43 @@ def update_graph(experimentalunitID, datatypeID, treatmentChoice):
 
         df = GeneratePlot_D1.QueryAllUnits(datatypeID, TreatmentID)
         fig = GeneratePlot_D1.TimeSeriesAverage(df)
-        container = ""
 
     else:
         treatmentid_s = treatmentid_s + (16 * (experimentalunitID - 1))
         specific_treatment = ((treatmentChoice - 1) * 4) + datatypeID
         TreatmentID = int(treatmentid_s[specific_treatment - 1])
-        container = ""
 
         df = GeneratePlot_D1.QueryUnit(experimentalunitID, datatypeID, TreatmentID)
         fig = GeneratePlot_D1.TimeSeries(df)
 
-    return container, fig
+    return fig
+
+
+
+@app.callback(
+    Output("download-text", "data"),
+    [Input("btn-download-txt", "n_clicks"), Input(component_id='experimentalunitID', component_property='value'),
+     Input(component_id='datatypeID', component_property='value'),
+     Input(component_id='treatmentChoice', component_property='value')],
+    prevent_initial_call=True,)
+
+def func(n_clicks, experimentalunitID, datatypeID, treatmentChoice):
+    print(n_clicks)
+    if n_clicks == 1:
+        if experimentalunitID == 11:
+            nothing = dict(content="There is no metadata for the average", filename="average.txt")
+
+            return nothing
+
+        else:
+            DT =["Deoxy","Oxy","Total","MES"]
+            T = ["Moto", "Rest", "ViMo", "ViSo"]
+            filename = "VM" + str(experimentalunitID) + "_" + DT[datatypeID] + "_" + T[treatmentChoice] + ".json"
+            content = GeneratePlot_D1.getTreatment(treatmentChoice)
+            content = json.dumps(content[0], indent = 4)
+            return dict(content=content, filename=filename)
+    n_clicks = 0
+
 
 
 # ------------------------------------------------------------------------------
