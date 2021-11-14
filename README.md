@@ -25,7 +25,12 @@ Version from 14/11/2021 @ 00:45
 
 5. Let it run, it will take approx. 15 minutes, sorry.
 
-6. Run D1_dashboard
+6. Run D1_dashboard, press on the IP address and it will pop up
+
+## To do:
+
+1. Dataset 1 JSON strings are a little wrong so they need fixing
+2. Dataset 2
 
 
 
