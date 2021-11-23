@@ -40,6 +40,7 @@ CREATE TABLE EndpointHUB (
   Timestamp timestamp,
   Name varchar(30),
   ObservedValue varchar ARRAY,
+  Acquistiontimestamp varchar,
   PRIMARY KEY (EndpointID, Source, Timestamp)
 );
 
@@ -78,28 +79,6 @@ CREATE TABLE Conducts (
       REFERENCES ResearcherHUB(ResearcherID)
 );
 
-CREATE TABLE SessionHUB (
-  SessionID SERIAL NOT NULL UNIQUE,
-  Source varchar,
-  Timestamp timestamp,
-  Acquisitiontimestamp varchar,
-  PRIMARY KEY (SessionID, Source, Timestamp)
-);
-
-
-
-CREATE TABLE MeasuresLINK (
-  MeasuresID SERIAL NOT NULL UNIQUE,
-  Source varchar,
-  Timestamp timestamp,
-  ExperimentalUnitID int NOT NULL,
-  SessionID int NOT NULL,
-  PRIMARY KEY (MeasuresID, Source, Timestamp),
-    FOREIGN KEY (SessionID)
-      REFERENCES SessionHUB(SessionID),
-    FOREIGN KEY (ExperimentalUnitID)
-      REFERENCES ExperimentalUnitHUB(ExperimentalUnitID)
-);
 
 
 CREATE TABLE ExperimentNoSessions (
@@ -213,4 +192,25 @@ CREATE TABLE Treatments (
   FOREIGN KEY (EndpointID) REFERENCES EndpointHUB(EndpointID),
   FOREIGN KEY (TreatmentID) REFERENCES TreatmentHUB(TreatmentID)
 );
+
+
+CREATE TABLE SessionHUB (
+  SessionID SERIAL NOT NULL,
+  Source varchar(30),
+  Timestamp timestamp,
+  Description varchar(30),
+  PRIMARY KEY (SessionID)
+);
+
+CREATE TABLE MeasuresLINK (
+  MeasuresID SERIAL NOT NULL,
+  Source varchar(30),
+  Timestamp timestamp,
+  SessionID int NOT NULL,
+  EndpointID int NOT NULL UNIQUE,
+  PRIMARY KEY (MeasuresID),
+  FOREIGN KEY (EndpointID) REFERENCES EndpointHUB(EndpointID),
+  FOREIGN KEY (SessionID) REFERENCES SessionHUB(SessionID)
+);
+
 
