@@ -74,10 +74,6 @@ def insertStaticData(db_name, db_user, db_password):
     insert = "INSERT INTO SessionHUB (Source, timestamp) VALUES ('" + hashed_user + "', current_timestamp);"  # update description
     insertStatement(insert, conn, cursor)
 
-    insert = "INSERT INTO ExperimentalUnitHUB (ExperimentalUnitID, Source, timestamp) VALUES (%s, '" + hashed_user + "', current_timestamp);"
-    cursor.execute(insert, [experimentalunitnumber])
-    conn.commit()
-
 
 def insertData(wl1Path, wl2Path, hdrPath, db_name, db_user, db_password, experimentalunitnumber, endpointnumber,
                treatmentnumber, datatypenumber):
@@ -118,6 +114,10 @@ def insertData(wl1Path, wl2Path, hdrPath, db_name, db_user, db_password, experim
 
         insert = "INSERT INTO ObservesLINK (Source, timestamp, ExperimentID, EndpointID) VALUES ('" + hashed_user + "', current_timestamp, 2, %s);"
         cursor.execute(insert, [endpointnumber])
+        conn.commit()
+
+        insert = "INSERT INTO ExperimentalUnitHUB (ExperimentalUnitID, Source, timestamp) VALUES (%s, '" + hashed_user + "', current_timestamp);"
+        cursor.execute(insert, [experimentalunitnumber])
         conn.commit()
 
         insert = "INSERT INTO EndpointUnitLINK (Source, timestamp, ExperimentalUnitID, EndpointID) VALUES ('" + hashed_user + "', current_timestamp, %s, %s);"
