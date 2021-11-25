@@ -33,7 +33,8 @@ def main():
 
     CreateDB.createDB(db_name, db_user, db_password)
     Populate_D1.PopulateVault(db_name, db_user, db_password)
-
+    populate_D2_1_NIRS.populateVault(db_name, db_user, db_password)
+    populate_D2_2_NIRS.populateVault(db_name, db_user, db_password)
 
 if __name__ == "__main__":
     start_time = time.time()
