@@ -136,8 +136,18 @@ def func(n_clicks, experimentalunitID, datatypeID, treatmentChoice):
 
 
 
+import webbrowser
+from threading import Timer
 
 
+port = 5000
+
+def open_browser():
+	webbrowser.open_new("http://localhost:{}".format(port))
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    open_browser()
+    app.run_server(port=port)
+
+
+
