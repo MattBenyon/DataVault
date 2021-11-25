@@ -7,6 +7,8 @@ Created on Mon Nov  1 13:34:18 2021
 
 import CreateDB
 import Populate_D1
+import populate_D2_1_NIRS
+import populate_D2_2_NIRS
 import time
 import easygui
 
