@@ -98,10 +98,6 @@ def insertData(wl1Path, wl2Path, hdrPath, db_name, db_user, db_password, experim
         cursor.execute(insert, [endpointnumber])
         conn.commit()
 
-        insert = "INSERT INTO ExperimentalUnitHUB (ExperimentalUnitID, Source, timestamp) VALUES (%s, '" + hashed_user + "', current_timestamp);"
-        cursor.execute(insert, [experimentalunitnumber])
-        conn.commit()
-
         insert = "INSERT INTO EndpointUnitLINK (Source, timestamp, ExperimentalUnitID, EndpointID) VALUES ('" + hashed_user + "', current_timestamp, %s, %s);"
         cursor.execute(insert, (experimentalunitnumber, endpointnumber))
         conn.commit()
