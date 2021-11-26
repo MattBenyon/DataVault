@@ -11,7 +11,7 @@ import populate_D2_1_NIRS
 import populate_D2_2_NIRS
 import time
 import easygui
-
+import populate_D2_EEG
 
 
 
@@ -37,6 +37,7 @@ def main():
     Populate_D1.PopulateVault(db_name, db_user, db_password)
     populate_D2_1_NIRS.populateVault(db_name, db_user, db_password)
     populate_D2_2_NIRS.populateVault(db_name, db_user, db_password)
+    populate_D2_EEG.populateVault(db_name,db_user, db_password)
 
 if __name__ == "__main__":
     start_time = time.time()
