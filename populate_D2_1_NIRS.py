@@ -12,15 +12,15 @@ def getData(wl1Path, wl2Path, hdrPath):
     return expData, MetaData
 
 def getFilePaths():
-    directory = 'Dataset2_Preautism_fNIRS-Data\\fNIRS-Data\\1raSessionDR'
+    directory = 'Dataset2_Preautism_fNIRS-Data/fNIRS-Data/1raSessionDR'
     filepaths = []
     wl1Paths = []
     wl2Paths = []
     hdrPaths = []
 
     for i in range(1, 44):
-        for filename in os.listdir(directory + "\\Autism00" + str(i).zfill(2) + "-1" ):
-            f = os.path.join(directory + "\\Autism00" + str(i).zfill(2) + "-1", filename)
+        for filename in os.listdir(directory + "/Autism00" + str(i).zfill(2) + "-1" ):
+            f = os.path.join(directory + "/Autism00" + str(i).zfill(2) + "-1", filename)
             # checking if it is a file
             if os.path.isfile(f):
                 filepaths.append(f)
@@ -67,15 +67,13 @@ def insertStaticData(db_name, db_user, db_password):
     insert = "INSERT INTO conducts (Source, timestamp, ExperimentID, ResearcherID) VALUES ('" + hashed_user + "', current_timestamp, 2, 2);"
     insertStatement(insert, conn, cursor)
 
-    insert = "INSERT INTO DataType (Source, timestamp, Name) VALUES ('" + hashed_user + "', current_timestamp, 'fNIRS');"  # update description
-    insertStatement(insert, conn, cursor)
 
     insert = "INSERT INTO SessionHUB (Source, timestamp) VALUES ('" + hashed_user + "', current_timestamp);"  # update description
     insertStatement(insert, conn, cursor)
 
 
 def insertData(wl1Path, wl2Path, hdrPath, db_name, db_user, db_password, experimentalunitnumber, endpointnumber,
-               treatmentnumber, datatypenumber):
+               treatmentnumber, DataSourceNumber):
     expData, MetaData = getData(wl1Path, wl2Path, hdrPath)
 
     hashed_user = hashlib.md5(db_user.encode('utf-8')).hexdigest()
@@ -122,8 +120,8 @@ def insertData(wl1Path, wl2Path, hdrPath, db_name, db_user, db_password, experim
         cursor.execute(insert, (experimentalunitnumber, endpointnumber))
         conn.commit()
 
-        insert = "INSERT INTO DataTypeLINK (Source, timestamp, EndpointID, DataTypeID) VALUES ('" + hashed_user + "', current_timestamp, %s, %s);"
-        cursor.execute(insert, (endpointnumber, datatypenumber))
+        insert = "INSERT INTO DataSourceLINK (Source, timestamp, EndpointID, DataSourceID) VALUES ('" + hashed_user + "', current_timestamp, %s, %s);"
+        cursor.execute(insert, (endpointnumber, DataSourceNumber))
         conn.commit()
 
         insert = "INSERT INTO Treatments (Source, timestamp, TreatmentID, EndpointID) VALUES ('" + hashed_user + "', current_timestamp, %s, %s);"
@@ -150,7 +148,7 @@ def populateVault(db_name, db_user, db_password):
 
     experimentalunitnumber = 11
     groupnumber = 0
-    datatypenumber= 5
+    DataSourceNumber= 1
     endpointnumber = 443111
     treatmentnumber = 161
 
@@ -160,9 +158,9 @@ def populateVault(db_name, db_user, db_password):
         print("\nUploading", i+1, "of", filepath_length, "...")
         endointnumber_temp, treatmentnumber = insertData(wl1Paths[i], wl2Paths[i], hdrPaths[i], db_name, db_user, db_password,
                                                          experimentalunitnumber,
-                                                         endpointnumber, treatmentnumber, datatypenumber)
+                                                         endpointnumber, treatmentnumber, DataSourceNumber)
 
         endpointnumber = endointnumber_temp
-        datatypenumber = 5
+        DataSourceNumber = 1
         treatmentnumber += 1
         experimentalunitnumber += 1

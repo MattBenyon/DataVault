@@ -46,12 +46,12 @@ def insertStaticData(db_name, db_user, db_password):
 
     cursor = conn.cursor()
 
-    insert = "INSERT INTO DataType (Source, timestamp, Name) VALUES ('" + hashed_user + "', current_timestamp, 'EEG');"  # update description
+    insert = "INSERT INTO DataSource (Source, timestamp, Name) VALUES ('" + hashed_user + "', current_timestamp, 'EEG');"  # update description
     insertStatement(insert, conn, cursor)
 
 
 def insertData(filepath, db_name, db_user, db_password, experimentalunitnumber, endpointnumber,
-               treatmentnumber, datatypenumber, toJoin):
+               treatmentnumber, DataSourceNumber, toJoin):
     expData = getData(filepath, toJoin)
 
     hashed_user = hashlib.md5(db_user.encode('utf-8')).hexdigest()
@@ -89,8 +89,8 @@ def insertData(filepath, db_name, db_user, db_password, experimentalunitnumber, 
         cursor.execute(insert, (experimentalunitnumber, endpointnumber))
         conn.commit()
 
-        insert = "INSERT INTO DataTypeLINK (Source, timestamp, EndpointID, DataTypeID) VALUES ('" + hashed_user + "', current_timestamp, %s, %s);"
-        cursor.execute(insert, (endpointnumber, datatypenumber))
+        insert = "INSERT INTO DataSourceLINK (Source, timestamp, EndpointID, DataSourceID) VALUES ('" + hashed_user + "', current_timestamp, %s, %s);"
+        cursor.execute(insert, (endpointnumber, DataSourceNumber))
         conn.commit()
 
         insert = "INSERT INTO Treatments (Source, timestamp, TreatmentID, EndpointID) VALUES ('" + hashed_user + "', current_timestamp, %s, %s);"
@@ -130,7 +130,7 @@ def populateVault(db_name, db_user, db_password):
     filepaths, toJoin = getFilePaths()
     experimentalunitnumber = 11 # this has to start from 0 then be updated before calling function as 0 mod 16 is 0
     groupnumber = 0
-    datatypenumber= 6
+    DataSourceNumber= 2
     endpointnumber = 575446
     treatmentnumber = 161
 
@@ -140,10 +140,10 @@ def populateVault(db_name, db_user, db_password):
         print("\nUploading", i+1, "of", filepath_length, "...")
         endointnumber_temp, treatmentnumber = insertData(filepaths[i], db_name, db_user, db_password,
                                                          experimentalunitnumber,
-                                                         endpointnumber, treatmentnumber, datatypenumber, toJoin)
+                                                         endpointnumber, treatmentnumber, DataSourceNumber, toJoin)
 
         endpointnumber = endointnumber_temp
-        datatypenumber = 5
+        DataSourceNumber = 2
         treatmentnumber += 1
 """
 filepaths, toJoin = getFilePaths()
