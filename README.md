@@ -46,6 +46,11 @@ Warning: do not run the code without completing this step, it will not work!
 
 ### Populating the database <a name="instructions3"></a>
 
+Before running any scripts, please ensure that you have pasted the correct folders for dataset 1 and 2 so that they REPLACE the folders as seen in the image below
+
+![Screenshot](https://raw.githubusercontent.com/MattBenyon/DataVault/main/Screenshot%202021-11-10%20135209.png)
+
+
 To populate the database, the user must run `main.py`. This ussually takes around 20-40 minutes to run depending on computer performance.
 
 
