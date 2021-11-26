@@ -1,10 +1,13 @@
 # Group 9 Data Warehousing project
-Version correct to 26/11/2021
+Version correct to 26/11/2021 15:39
 
 # Table of contents
 1. [Introduction](#introduction)
 2. [Instructions](#instructions)
-    1. [Creatting a PostgreSQL user and database](#instructions1)
+    1. [Creating a PostgreSQL user and database](#instructions1)
+    2. [Preparing the Python environment](#instructions2)
+    3. [Populating the database](#instructions3)
+    4. [Running data marts](#instructions4)
 3. [Another paragraph](#paragraph2)
 
 ## Introduction <a name="introduction"></a>
@@ -29,38 +32,26 @@ This project was developed on Python Version 3.8. While other versions may work,
 
 Python 3.8 is avaiable at: https://www.python.org/downloads/release/python-380/
 
+Required packages for this project:
+
+- easygui
+- psycopg2
+- pandas
+- numpy
+- plotly
+
+Please use `pip install <package name>` in your Python environment.
+
+Warning: do not run the code without completing this step, it will not work!
+
+### Populating the database <a name="instructions3"></a>
+
+To populate the database, the user must run `main.py`. This ussually takes around 20-40 minutes to run depending on computer performance.
 
 
-##  Instructions for getting the project to run on your machines.
-
-1. Open PostgreSQL shell, create a user called g09 with password g09, grant user permissions.
-
-2. Create a database called v4_test.
-
-3. Download Python scripts to your project file. Your directory needs to look like the below:
-
-![Screenshot](https://raw.githubusercontent.com/MattBenyon/DataVault/main/Screenshot%202021-11-10%20135209.png)
-
-4. Make sure that you have pip'd to your environment the following:
-
-	- easygui
-	- psycopg2
-	- pandas
-	- numpy
-	- plotly
-	- hashlib
+### Running data marts <a name="instructions4"></a>
 
 
-4. Run main.py by either entering details into gui or by commenting out gui section and uncommenting variables below it
-
-5. Let it run, it will take approx. 15 minutes, sorry.
-
-6. Run D1_dashboard, press on the IP address and it will pop up
-
-## To do:
-
-1. Dataset 1 JSON strings are a little wrong so they need fixing
-2. Dataset 2
 
 
 
