@@ -46,9 +46,9 @@ Warning: do not run the code without completing this step, it will not work!
 
 ### Populating the database <a name="instructions3"></a>
 
-Before running any scripts, please ensure that you have pasted the correct folders for dataset 1 and 2 so that they REPLACE the folders as seen in the image below
+Before running any scripts, within the Code folder please ensure that you have pasted the correct folders for dataset 1 and 2 so that they REPLACE the folders as seen in the image below
 
-![Screenshot](https://raw.githubusercontent.com/MattBenyon/DataVault/main/Screenshot%202021-11-10%20135209.png)
+![Screenshot](https://raw.githubusercontent.com/MattBenyon/DataVault/main/Screenshot%202021-11-26%20154714.png)
 
 
 To populate the database, the user must run `main.py`. This ussually takes around 20-40 minutes to run depending on computer performance.
@@ -56,6 +56,13 @@ To populate the database, the user must run `main.py`. This ussually takes aroun
 
 ### Running data marts <a name="instructions4"></a>
 
+To run the data marts, just run any of the following scripts:
+
+- Dataset 1:
+    -  `D1_dashboard.py`
+- Dataset 2:
+    - EEG: `not yet available`
+    - fNIRS: `not yet available`
 
 
 
