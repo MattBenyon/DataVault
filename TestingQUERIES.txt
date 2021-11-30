@@ -6,7 +6,7 @@ INNER JOIN TreatmentHUB ON Treatments.TreatmentID = TreatmentHUB.TreatmentID
 INNER JOIN EndpointUnitLink ON EndpointHUB.EndpointID = EndpointUnitLINK.EndpointID
 INNER JOIN MeasuresLINK ON MeasuresLINK.EndpointID = EndpointHUB.EndpointID
 INNER JOIN DataSourceLINK ON DataSourceLINK.EndpointID = EndpointHUB.EndpointID
-WHERE EndpointUnitLINK.ExperimentalUnitID = 11 AND TreatmentHUB.TreatmentID = 161 AND MeasuresLINK.SessionID = 1 AND DataSourceLINK.DataSourceID = 1;
+WHERE EndpointUnitLINK.ExperimentalUnitID = %s AND TreatmentHUB.TreatmentID = %s AND MeasuresLINK.SessionID = %s AND DataSourceLINK.DataSourceID = 1;
 
 
 
