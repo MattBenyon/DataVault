@@ -6,7 +6,7 @@ import numpy as np
 
 def getTreatment(treatmentID):
     conn = connect(
-        dbname='v4_test',
+        dbname='g09_data_vault',
         user='g09',
         host="localhost",
         password='g09')
