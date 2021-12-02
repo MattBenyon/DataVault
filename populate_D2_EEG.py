@@ -143,5 +143,5 @@ def populateVault(db_name, db_user, db_password):
                                                          endpointnumber, treatmentnumber, datatypenumber, toJoin)
 
         endpointnumber = endointnumber_temp
-        datatypenumber = 5
+        datatypenumber = 6
         treatmentnumber += 1
