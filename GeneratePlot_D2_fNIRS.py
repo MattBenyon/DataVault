@@ -1,7 +1,7 @@
 
 from psycopg2 import connect
 import pandas as pd
-import plotly.express as px
+import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 
@@ -85,15 +85,24 @@ def TimeSeries(data):
 
     return fig
 '''
+experimentalunitID = 11
+treatmentID = (experimentalunitID-10) + 160
+SessionID = 1
+datasourceID =1
+data1 = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
 
+treatmentID = (experimentalunitID-10) + 203
+SessionID = 2
+data2 = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
+#subplot = TimeSeries(data1, data2)
 
 def TimeSeries(data1, data2): 
 
     fig = make_subplots(rows = 2, cols = 1)
     
-    fig.append_trace(px.line(data1), row = 1, col = 1)
+    fig.append_trace(go.Scatter(data1, mode='lines', name='channel'), row = 1, col = 1)
     
-    fig.append_trace(px.line(data2), row = 2, col = 1)
+    fig.append_trace(go.Scatter(data2, mode='lines', name='channel'), row = 2, col = 1)
     
     fig.update_xaxes(title_text='Samples in time', row=1, col=1)
     fig.update_xaxes(title_text='Samples in time', row=2, col=1)
@@ -113,17 +122,6 @@ def TimeSeries(data1, data2):
     ***Make subplot from fig1 fig2***
     '''
     fig.show()
-    
-experimentalunitID = 11
-treatmentID = (experimentalunitID-10) + 160
-SessionID = 1
-datasourceID =1
-data1 = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
-
-treatmentID = (experimentalunitID-10) + 203
-SessionID = 2
-data2 = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
-#subplot = TimeSeries(data1, data2)
 
 
 
