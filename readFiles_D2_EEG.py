@@ -1,4 +1,5 @@
 import mat73
+import numpy as np
 
 
 def eegData(filepath):
