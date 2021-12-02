@@ -67,7 +67,6 @@ def insertStaticData(db_name, db_user, db_password):
     insert = "INSERT INTO conducts (Source, timestamp, ExperimentID, ResearcherID) VALUES ('" + hashed_user + "', current_timestamp, 2, 2);"
     insertStatement(insert, conn, cursor)
 
-
     insert = "INSERT INTO SessionHUB (Source, timestamp) VALUES ('" + hashed_user + "', current_timestamp);"  # update description
     insertStatement(insert, conn, cursor)
 
