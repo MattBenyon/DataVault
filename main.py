@@ -17,7 +17,7 @@ def main():
     """Builds and populates the database."""
     
     db_user, db_password = "g09","g09"
-    db_name = "g0_data_vault"
+    db_name = "g09_data_vault"
 
     CreateDB.createDB(db_name, db_user, db_password)
     Populate_D1.PopulateVault(db_name, db_user, db_password)
