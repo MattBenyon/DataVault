@@ -14,7 +14,8 @@ import populate_D2_EEG
 
 
 def main():
-
+    """Builds and populates the database."""
+    
     db_user, db_password = "g09","g09"
     db_name = "g0_data_vault"
 
