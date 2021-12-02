@@ -140,7 +140,7 @@ def insertData(wl1Path, wl2Path, hdrPath, db_name, db_user, db_password, experim
 
 
 def populateVault(db_name, db_user, db_password):
-    print("\n*** POPULATING DATA VAULT WITH DATASET 2 - Session 1 ***")
+    print("\n*** POPULATING DATA VAULT WITH DATASET 2 - SESSION 1 ***")
 
     insertStaticData(db_name, db_user, db_password)
 
