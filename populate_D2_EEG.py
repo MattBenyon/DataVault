@@ -46,7 +46,9 @@ def insertStaticData(db_name, db_user, db_password):
 
     cursor = conn.cursor()
 
-
+    insert = "INSERT INTO DataSource (Source, timestamp, Name) VALUES ('" + hashed_user + "', current_timestamp, 'EEG');"  # update description
+    insertStatement(insert, conn, cursor)
+    
 def insertData(filepath, db_name, db_user, db_password, experimentalunitnumber, endpointnumber,
                treatmentnumber, DataSourceNumber, toJoin):
     expData = getData(filepath, toJoin)
