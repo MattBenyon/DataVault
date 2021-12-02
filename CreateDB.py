@@ -24,7 +24,6 @@ def createDB(db_name, db_user,db_password):
         with open("DataVaultV4.txt") as f:
           vault_script = f.read()
 
-        print("Creating database...")
         cursor.execute(vault_script)
 
         conn.commit()
@@ -32,8 +31,10 @@ def createDB(db_name, db_user,db_password):
         cursor.close()
 
         conn.close()
-
+        print("Creating database...")
+        
     except:
+        print("Error: ")
         print("\nPlease check that the database name, user and password are the same as specified in the documentation."
               " If this is not the first time you are running main.py, you may need to drop the database in PostgreSQL shell.")
         quit()
