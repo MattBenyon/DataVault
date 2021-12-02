@@ -2,6 +2,7 @@
 from psycopg2 import connect
 import pandas as pd
 import plotly.express as px
+from plotly.subplots import make_subplots
 import numpy as np
 
 def getTreatment(treatmentID):
@@ -71,7 +72,7 @@ def QueryUnit(experimentalunitID, treatmentID, sessionID, datasourceID):
 
 
 
-
+'''
 
 def TimeSeries(data):
 
@@ -83,38 +84,51 @@ def TimeSeries(data):
                       legend_title_text='Channel')
 
     return fig
-
-
 '''
-def TimeSeries(data1, data2):
-    fig1 = px.line(data)
+
+
+def TimeSeries(data1, data2): 
+
+    fig = make_subplots(rows = 2, cols = 1)
+    
+    fig.append_trace(px.line(data1), row = 1, col = 1)
+    
+    fig.append_trace(px.line(data2), row = 2, col = 1)
+    
+    fig.update_xaxes(title_text='Samples in time', row=1, col=1)
+    fig.update_xaxes(title_text='Samples in time', row=2, col=1)
+    
+    fig.update_yaxes(title_text='Signal Strength', row=1, col=1)
+    fig.update_yaxes(title_text='Signal Strength', row=2, col=1)
+    '''
     fig1.update_layout(xaxis_title='Samples in time',
                      yaxis_title='Signal Strength',
                       legend_title_text='Channel')
     
-    fig2 = px.line(data)
+    fig2 = px.line(data2)
     fig2.update_layout(xaxis_title='Samples in time',
                      yaxis_title='Signal Strength',
                       legend_title_text='Channel')
                       
     ***Make subplot from fig1 fig2***
-    
-    return the subplot
+    '''
+    fig.show()
     
 experimentalunitID = 11
 treatmentID = (experimentalunitID-10) + 160
 SessionID = 1
 datasourceID =1
 data1 = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
+
 treatmentID = (experimentalunitID-10) + 203
 SessionID = 2
 data2 = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
-subplot = TimeSeries(data1, data2)
+#subplot = TimeSeries(data1, data2)
 
-'''
+
 
 # below are the numbers to generate individual plots, above is how you would have subplots
-
+'''
 experimentalunitID = 11
 treatmentID = (experimentalunitID-10) + 160
 SessionID = 1
@@ -130,3 +144,4 @@ datasourceID = 1
 data = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
 fig2 = TimeSeries(data)
 fig2.show()
+'''
