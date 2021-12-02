@@ -3,8 +3,8 @@ import readFiles_D2_EEG
 import hashlib
 from psycopg2 import connect
 
-def getData(filepath, toJoin):
 
+def getData(filepath, toJoin):
     if "09-1" in filepath:
         expData = readFiles_D2_EEG.joinData(filepath, toJoin[0])
     elif "10-1" in filepath:
@@ -13,6 +13,7 @@ def getData(filepath, toJoin):
         expData = readFiles_D2_EEG.eegData(filepath)
 
     return expData
+
 
 def getFilePaths():
     directory = 'Dataset2_Preautism_EEG-Data\\EEG-Data\\'
@@ -35,6 +36,7 @@ def insertStatement(insert, conn, cursor):
     cursor.execute(insert)
     conn.commit()
 
+
 def insertStaticData(db_name, db_user, db_password):
     hashed_user = hashlib.md5(db_user.encode('utf-8')).hexdigest()
 
@@ -48,7 +50,8 @@ def insertStaticData(db_name, db_user, db_password):
 
     insert = "INSERT INTO DataSource (Source, timestamp, Name) VALUES ('" + hashed_user + "', current_timestamp, 'EEG');"  # update description
     insertStatement(insert, conn, cursor)
-    
+
+
 def insertData(filepath, db_name, db_user, db_password, experimentalunitnumber, endpointnumber,
                treatmentnumber, DataSourceNumber, toJoin):
     expData = getData(filepath, toJoin)
@@ -63,22 +66,25 @@ def insertData(filepath, db_name, db_user, db_password, experimentalunitnumber, 
 
     cursor = conn.cursor()
 
-    row_count = len(expData.index)
+    # for some reason data in .mat files transposed?
 
-    for i in range(row_count):
-        row = expData.loc[i].to_list()
-        row = [str(x) for x in row]
+    column_count = len(expData.columns)
 
-        row = ",".join(row)
-        row = "{"+row+"}"
+    for i in range(column_count):
+
+        column = expData.iloc[:,i].to_list()
+        column = [str(x) for x in column]
+
+        column = ",".join(column)
+        column = "{" + column + "}"
 
         acquisition_time = "NULL"
 
         insert = "INSERT INTO EndpointHUB (Source, timestamp, ObservedValue, Acquistiontimestamp) VALUES (%s, current_timestamp, %s, %s);"  # update description
-        cursor.execute(insert, (hashed_user, row, acquisition_time))
+        cursor.execute(insert, (hashed_user, column, acquisition_time))
         conn.commit()
 
-    for i in range(row_count):
+    for i in range(column_count):
 
         insert = "INSERT INTO ObservesLINK (Source, timestamp, ExperimentID, EndpointID) VALUES ('" + hashed_user + "', current_timestamp, 2, %s);"
         cursor.execute(insert, [endpointnumber])
@@ -127,21 +133,28 @@ def populateVault(db_name, db_user, db_password):
     insertStaticData(db_name, db_user, db_password)
 
     filepaths, toJoin = getFilePaths()
-    experimentalunitnumber = 11 # this has to start from 0 then be updated before calling function as 0 mod 16 is 0
-    groupnumber = 0
+    experimentalunitnumber = 11  # this has to start from 0 then be updated before calling function as 0 mod 16 is 0
     DataSourceNumber = 2
     endpointnumber = 575446
     treatmentnumber = 161
-
+    even_check = 1
     filepath_length = len(filepaths)
 
     for i in range(filepath_length):
-        print("\nUploading", i+1, "of", filepath_length, "...")
+        print("\nUploading", i + 1, "of", filepath_length, "...")
+
+        print("ExpUnit: {}, counter: {}, counter mod 2: {}, starting endpoint: {}, datasource: {}, "
+              "treatment: {}".format(experimentalunitnumber, even_check, (even_check % 2), endpointnumber, DataSourceNumber, treatmentnumber))
+
         endointnumber_temp, treatmentnumber = insertData(filepaths[i], db_name, db_user, db_password,
                                                          experimentalunitnumber,
                                                          endpointnumber, treatmentnumber, DataSourceNumber, toJoin)
 
         endpointnumber = endointnumber_temp
+        print("Ending endpoint: {}".format(endpointnumber))
         DataSourceNumber = 2
         treatmentnumber += 1
-        experimentalunitnumber += 1
+        if (even_check) % 2 == 0:
+            experimentalunitnumber += 1
+        even_check += 1
+
