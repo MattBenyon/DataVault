@@ -34,5 +34,6 @@ def createDB(db_name, db_user,db_password):
         conn.close()
 
     except:
-        print("\nThe credentials were incorrect or the user does not have correct permissions. Please correct this issue and run the program again.")
+        print("\nPlease check that the database name, user and password are the same as specified in the documentation."
+              " If this is not the first time you are running main.py, you may need to drop the database in PostgreSQL shell.")
         quit()
