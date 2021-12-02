@@ -144,3 +144,4 @@ def populateVault(db_name, db_user, db_password):
         endpointnumber = endointnumber_temp
         DataSourceNumber = 2
         treatmentnumber += 1
+        experimentalunitnumber += 1
