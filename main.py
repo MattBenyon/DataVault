@@ -10,28 +10,13 @@ import Populate_D1
 import populate_D2_1_NIRS
 import populate_D2_2_NIRS
 import time
-import easygui
 import populate_D2_EEG
-
 
 
 def main():
 
-
-    # GUI for entering selections
-    msg = "Please enter PostgreSQL credentials"
-    title= ""
-    fieldNames = ["Database: ", "Username: ", "Password: "]
-    fieldValues = []
-
-    fieldValues = easygui.multenterbox(msg, title, fieldNames)
-
-    db_name, db_user, db_password = fieldValues[0], fieldValues[1], fieldValues[2]
-
-    #for quicker use when testing
-    #db_user, db_password = "g09","g09"
-    #db_name = "v4_test"
-
+    db_user, db_password = "g09","g09"
+    db_name = "g0_data_vault"
 
     CreateDB.createDB(db_name, db_user, db_password)
     Populate_D1.PopulateVault(db_name, db_user, db_password)
