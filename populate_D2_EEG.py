@@ -67,12 +67,11 @@ def insertData(filepath, db_name, db_user, db_password, experimentalunitnumber, 
     cursor = conn.cursor()
 
     # for some reason data in .mat files transposed?
-
-    column_count = len(expData.columns)
+    row_count, column_count = expData.shape
 
     for i in range(column_count):
 
-        column = expData.iloc[:,i].to_list()
+        column = expData[:,i]
         column = [str(x) for x in column]
 
         column = ",".join(column)
