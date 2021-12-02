@@ -9,7 +9,8 @@ from psycopg2 import connect
 
 
 def createDB(db_name, db_user,db_password):
-    """Reads commands to build the data vault and builds the vault."""
+    """Reads commands from DataVaultV4.txt to build the data vault."""
+    
     try:
 
         conn = connect(
