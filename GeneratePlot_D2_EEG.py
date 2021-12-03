@@ -58,7 +58,8 @@ def QueryUnit(experimentalunitID, treatmentID, sessionID, datasourceID):
 
     data = pd.DataFrame(rows)
     # print(data.head())
-    data = data.dropna(axis='columns')  # sometimes it adds in extra columns full of NaNs, this is a workaround
+    data.dropna(axis='columns', inplace=True)  # sometimes it adds in extra columns full of NaNs, this is a workaround
+    data.drop(data.columns[29:], axis=1, inplace=True)
 
     return data
 
