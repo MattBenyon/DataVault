@@ -6,6 +6,7 @@ import numpy as np
 import json
 
 import GeneratePlot_D2_EEG
+import GeneratePlot_D2_fNIRS
 
 app = Dash(__name__)
 
@@ -90,12 +91,12 @@ app.layout = html.Div([
 )
 
 def update_graph(experimentalunitID, datasource):
-    if datasource = 2:
+    if datasource == 2:
         SessionID = 1
         experimentalunitID = experimentalunitID + 10
         data = GeneratePlot_D2_EEG.QueryUnit(experimentalunitID, SessionID, datasource)
         fig = GeneratePlot_D2_EEG.TimeSeries(data)
-    elif datasource = 1:
+    elif datasource == 1:
         SessionID = 1
         experimentalunitID = experimentalunitID + 10
         data = GeneratePlot_D2_fNIRS.QueryUnit(experimentalunitID, SessionID, datasource)
