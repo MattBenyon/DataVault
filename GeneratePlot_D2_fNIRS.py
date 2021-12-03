@@ -145,31 +145,21 @@ def QueryUnit(experimentalunitID, sessionID, datasourceID):
 
 
 
-def TimeSeries(data1, data2):
-    fig = make_subplots(rows=2, cols=1)
+def TimeSeries(data):
 
-    fig.append_trace(go.Scatter(data1, mode='lines', name='channel'), row=1, col=1)
+    fig = px.line(data)
 
-    fig.append_trace(go.Scatter(data2, mode='lines', name='channel'), row=2, col=1)
+    fig.update_layout(xaxis_title='Samples in time (0.1s)',
+                      yaxis_title='Signal Strength',
+                      legend_title_text='Channel')
 
-    fig.update_xaxes(title_text='Samples in time', row=1, col=1)
-    fig.update_xaxes(title_text='Samples in time', row=2, col=1)
-
-    fig.update_yaxes(title_text='Signal Strength', row=1, col=1)
-    fig.update_yaxes(title_text='Signal Strength', row=2, col=1)
+    return fig
 
 
-    fig.show()
 
 
-experimentalunitID = 11
-SessionID = 1
-datasourceID = 1
-data1 = QueryUnit(experimentalunitID, SessionID, datasourceID)
 
 
-SessionID = 2
-data2 = QueryUnit(experimentalunitID, SessionID, datasourceID)
 
 
-TimeSeries(data1, data2)
+
