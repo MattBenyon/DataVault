@@ -67,7 +67,7 @@ def QueryUnit(experimentalunitID, sessionID, datasourceID):
 def TimeSeries(data):
     fig = px.line(data)
 
-    fig.update_layout(xaxis_title='Samples in time',
+    fig.update_layout(xaxis_title='Samples in time (downsampled by 50)',
                       yaxis_title='Signal Strength',
                       legend_title_text='Channel')
 
@@ -104,14 +104,13 @@ subplot = TimeSeries(data1, data2)
 
 # below are the numbers to generate individual plots, above is how you would have subplots
 
-experimentalunitID = 11
+experimentalunitID = 12
 SessionID = 1
 datasourceID = 2
 data = QueryUnit(experimentalunitID, SessionID, datasourceID)
 fig1 = TimeSeries(data)
 fig1.show()
 
-experimentalunitID = 11
 SessionID = 2
 data = QueryUnit(experimentalunitID, SessionID, datasourceID)
 fig2 = TimeSeries(data)
