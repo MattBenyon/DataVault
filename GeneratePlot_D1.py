@@ -6,7 +6,7 @@ import numpy as np
 
 def getTreatment(treatmentID):
     conn = connect(
-        dbname='g09_data_vault',
+        dbname='g09_data_vault_test',
         user='g09',
         host="localhost",
         password='g09')
@@ -25,7 +25,7 @@ def getTreatment(treatmentID):
 
 def QueryAllUnits(datatypeID, treatmentID):
     conn = connect(
-        dbname='v4_test',
+        dbname='g09_data_vault_test',
         user='g09',
         host="localhost",
         password='g09')
@@ -60,7 +60,7 @@ def QueryAllUnits(datatypeID, treatmentID):
 
 def QueryUnit(experimentalunitID, datatypeID, treatmentID):
     conn = connect(
-        dbname='v4_test',
+        dbname='g09_data_vault_test',
         user='g09',
         host="localhost",
         password='g09')
@@ -134,7 +134,7 @@ def TimeSeries(data):
                                               ))
 
 
-    fig.update_layout(xaxis_title='Samples in time',
+    fig.update_layout(xaxis_title='Samples in time (0.1s)',
                      yaxis_title='Signal Strength',
                       legend_title_text='Channel')
 
@@ -174,7 +174,7 @@ def TimeSeriesAverage(data):
      #                                         ))
 
 
-    fig.update_layout(xaxis_title='Samples in time',
+    fig.update_layout(xaxis_title='Samples in time (0.1s)',
                      yaxis_title='Signal Strength',
                       legend_title_text='Channel')
 

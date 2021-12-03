@@ -104,14 +104,4 @@ subplot = TimeSeries(data1, data2)
 
 # below are the numbers to generate individual plots, above is how you would have subplots
 
-experimentalunitID = 12
-SessionID = 1
-datasourceID = 2
-data = QueryUnit(experimentalunitID, SessionID, datasourceID)
-fig1 = TimeSeries(data)
-fig1.show()
 
-SessionID = 2
-data = QueryUnit(experimentalunitID, SessionID, datasourceID)
-fig2 = TimeSeries(data)
-fig2.show()
