@@ -106,27 +106,25 @@ def getTreatment(treatmentID):
     return result
 
 
-def QueryUnit(experimentalunitID, treatmentID, sessionID, datasourceID):
+def QueryUnit(experimentalunitID, sessionID, datasourceID):
     conn = connect(
-        dbname='g09_data_vault',
+        dbname='g09_data_vault_test',
         user='g09',
         host="localhost",
         password='g09')
 
-    print(experimentalunitID, treatmentID, sessionID)
+
     cursor = conn.cursor()
     select = ''' 
         SELECT EndpointHUB.EndpointID, ObservedValue FROM EndpointHUB
-        INNER JOIN Treatments ON EndpointHUB.EndpointID = Treatments.EndpointID
-        INNER JOIN TreatmentHUB ON Treatments.TreatmentID = TreatmentHUB.TreatmentID
         INNER JOIN EndpointUnitLink ON EndpointHUB.EndpointID = EndpointUnitLINK.EndpointID
         INNER JOIN MeasuresLINK ON MeasuresLINK.EndpointID = EndpointHUB.EndpointID
         INNER JOIN DataSourceLINK ON DataSourceLINK.EndpointID = EndpointHUB.EndpointID
-        WHERE EndpointUnitLINK.ExperimentalUnitID = %s AND TreatmentHUB.TreatmentID = %s AND MeasuresLINK.SessionID = %s AND DataSourceLINK.DataSourceID = %s
+        WHERE EndpointUnitLINK.ExperimentalUnitID = %s AND MeasuresLINK.SessionID = %s AND DataSourceLINK.DataSourceID = %s
         ORDER BY EndpointHUB.EndpointID asc;
         '''
 
-    cursor.execute(select, (experimentalunitID, treatmentID, sessionID, datasourceID))
+    cursor.execute(select, (experimentalunitID, sessionID, datasourceID))
     result = cursor.fetchall()
 
     conn.close()
@@ -146,82 +144,6 @@ def QueryUnit(experimentalunitID, treatmentID, sessionID, datasourceID):
     return data
 
 
-'''
-
-def TimeSeries(data):
-
-    fig = px.line(data)
-
-
-    fig.update_layout(xaxis_title='Samples in time',
-                     yaxis_title='Signal Strength',
-                      legend_title_text='Channel')
-
-    return fig
-'''
-
-
-def TimeSeries(data1, data2):
-    layout = go.Layout(title='processor ISW-1', plot_bgcolor='rgb(230,230,230)', showlegend=True)
-    fig = go.Figure(layout=layout)
-
-    line1 = px.line(data1)
-    line2 = px.line(data2)
-
-    fig.add_trace(line1, row=1, col=1)
-
-    fig.add_trace(line2, row=2, col=1)
-
-    fig.update_xaxes(title_text='Samples in time', row=1, col=1)
-    fig.update_xaxes(title_text='Samples in time', row=2, col=1)
-
-    fig.update_yaxes(title_text='Signal Strength', row=1, col=1)
-    fig.update_yaxes(title_text='Signal Strength', row=2, col=1)
-    '''
-    fig1.update_layout(xaxis_title='Samples in time',
-                     yaxis_title='Signal Strength',
-                      legend_title_text='Channel')
-
-    fig2 = px.line(data2)
-    fig2.update_layout(xaxis_title='Samples in time',
-                     yaxis_title='Signal Strength',
-                      legend_title_text='Channel')
-
-    ***Make subplot from fig1 fig2***
-    '''
-    fig.show()
-
-
-experimentalunitID = 11
-treatmentID = (experimentalunitID - 10) + 160
-SessionID = 1
-datasourceID = 1
-data1 = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
-
-treatmentID = (experimentalunitID - 10) + 203
-SessionID = 2
-data2 = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
-# subplot = TimeSeries(data1, data2)
-TimeSeries(data1, data2)
-
-# below are the numbers to generate individual plots, above is how you would have subplots
-'''
-experimentalunitID = 11
-treatmentID = (experimentalunitID-10) + 160
-SessionID = 1
-datasourceID =1
-data = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
-fig1 = TimeSeries(data)
-fig1.show()
-
-experimentalunitID = 11
-treatmentID = (experimentalunitID-10) + 203
-SessionID = 2
-datasourceID = 1
-data = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
-fig2 = TimeSeries(data)
-fig2.show()
-'''
 
 def TimeSeries(data1, data2):
     fig = make_subplots(rows=2, cols=1)
@@ -235,55 +157,19 @@ def TimeSeries(data1, data2):
 
     fig.update_yaxes(title_text='Signal Strength', row=1, col=1)
     fig.update_yaxes(title_text='Signal Strength', row=2, col=1)
-    '''
-    fig1.update_layout(xaxis_title='Samples in time',
-                     yaxis_title='Signal Strength',
-                      legend_title_text='Channel')
 
-    fig2 = px.line(data2)
-    fig2.update_layout(xaxis_title='Samples in time',
-                     yaxis_title='Signal Strength',
-                      legend_title_text='Channel')
 
-    ***Make subplot from fig1 fig2***
-    '''
     fig.show()
 
 
 experimentalunitID = 11
-treatmentID = (experimentalunitID - 10) + 160
 SessionID = 1
 datasourceID = 1
-data1 = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
+data1 = QueryUnit(experimentalunitID, SessionID, datasourceID)
 
-treatmentID = (experimentalunitID - 10) + 203
+
 SessionID = 2
-data2 = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
+data2 = QueryUnit(experimentalunitID, SessionID, datasourceID)
 
 
 TimeSeries(data1, data2)
-
-
-
-
-
-
-
-# below are the numbers to generate individual plots, above is how you would have subplots
-'''
-experimentalunitID = 11
-treatmentID = (experimentalunitID-10) + 160
-SessionID = 1
-datasourceID =1
-data = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
-fig1 = TimeSeries(data)
-fig1.show()
-
-experimentalunitID = 11
-treatmentID = (experimentalunitID-10) + 203
-SessionID = 2
-datasourceID = 1
-data = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
-fig2 = TimeSeries(data)
-fig2.show()
-'''
