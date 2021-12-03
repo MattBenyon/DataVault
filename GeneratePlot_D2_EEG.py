@@ -23,38 +23,38 @@ def getTreatment(treatmentID):
     return result
 
 
-def QueryUnit(experimentalunitID, treatmentID, sessionID, datasourceID):
+def QueryUnit(experimentalunitID, sessionID, datasourceID):
     conn = connect(
-        dbname='g09_data_vault',
+        dbname='g09_data_vault_test',
         user='g09',
         host="localhost",
         password='g09')
 
-    print(experimentalunitID, treatmentID, sessionID, datasourceID)
+    print(experimentalunitID, sessionID, datasourceID)
     cursor = conn.cursor()
     select = ''' 
         SELECT EndpointHUB.EndpointID, ObservedValue FROM EndpointHUB
-        INNER JOIN Treatments ON EndpointHUB.EndpointID = Treatments.EndpointID
-        INNER JOIN TreatmentHUB ON Treatments.TreatmentID = TreatmentHUB.TreatmentID
         INNER JOIN EndpointUnitLink ON EndpointHUB.EndpointID = EndpointUnitLINK.EndpointID
         INNER JOIN MeasuresLINK ON MeasuresLINK.EndpointID = EndpointHUB.EndpointID
         INNER JOIN DataSourceLINK ON DataSourceLINK.EndpointID = EndpointHUB.EndpointID
-        WHERE EndpointUnitLINK.ExperimentalUnitID = %s AND TreatmentHUB.TreatmentID = %s AND MeasuresLINK.SessionID = %s AND DataSourceLINK.DataSourceID = %s
+        WHERE EndpointUnitLINK.ExperimentalUnitID = %s AND MeasuresLINK.SessionID = %s AND DataSourceLINK.DataSourceID = %s
         ORDER BY EndpointHUB.EndpointID asc;
         '''
 
-    cursor.execute(select, (experimentalunitID, treatmentID, sessionID, datasourceID))
+    cursor.execute(select, (experimentalunitID, sessionID, datasourceID))
     result = cursor.fetchall()
+
 
     conn.close()
 
     rows = []
     for i in range(len(result)):
-        row = result[i][1]
-        # print(row)
-        row = [float(x) for x in row]
-        # print(row)
-        rows.append(row)
+        if (i % 50) == 0:   # downsampling by 50
+            row = result[i][1]
+            # print(row)
+            row = [float(x) for x in row]
+            # print(row)
+            rows.append(row)
 
     data = pd.DataFrame(rows)
     # print(data.head())
@@ -105,16 +105,14 @@ subplot = TimeSeries(data1, data2)
 # below are the numbers to generate individual plots, above is how you would have subplots
 
 experimentalunitID = 11
-treatmentID = (experimentalunitID - 10) + 160
 SessionID = 1
 datasourceID = 2
-data = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
+data = QueryUnit(experimentalunitID, SessionID, datasourceID)
 fig1 = TimeSeries(data)
 fig1.show()
 
 experimentalunitID = 11
-treatmentID = (experimentalunitID - 10) + 203
 SessionID = 2
-data = QueryUnit(experimentalunitID, treatmentID, SessionID, datasourceID)
+data = QueryUnit(experimentalunitID, SessionID, datasourceID)
 fig2 = TimeSeries(data)
 fig2.show()
