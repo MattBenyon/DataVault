@@ -1,0 +1,10 @@
+SELECT observesLink.experimentID, endpointHub.endpointID, observedValue, datasource.name
+FROM endpointHub
+INNER JOIN observesLink ON endpointHub.endpointID = observesLink.endpointID
+INNER JOIN datasourceLink ON endpointhub.endpointID = datasourceLink.endpointID
+INNER JOIN datasource ON datasource.dataSourceID = datasourceLink.datasourceID
+WHERE observesLink.experimentID = (1/2) [AND datasource.datasourceID = (1/2)] LIMIT 10;
+
+
+// experimentID | endpointID | observedValue | name
+// -------------+------------+---------------+------
